@@ -2,7 +2,9 @@ import matplotlib.pylab as plt
 import numpy as np
 import pandas as pd
 import statistical_module as sm
-import scipy.fft
+#import scipy.fft
+from numpy import fft
+
 
 ################################################################
 # Ricardo Tadeu Oliveira Catta Preta
@@ -293,17 +295,24 @@ def plot_std_vel(x, vel, dataframe, exp_std_vel):
     fig.tight_layout()
     plt.show()
 
-def fft_ke(t, s):
-    fft = np.fft.fft(s)
-    T = t[1] - t[0] # 0.001 -> 1/T = 1000
-    N = np.size(s)
-    #f = np.linspace(0, 1 / T, N)
-    # fornece os componentes de frequência correspondentes aos dados
-    f = np.fft.fftfreq(len(s), T)
-    frequencias = f[:N // 2]
-    amplitudes = np.abs(fft)[:N // 2] * 1 / N
-    plt.ylabel("Amplitude")
-    plt.xlabel("Frequência (Hz)")
-    plt.bar(frequencias, amplitudes, width=1.5)
-    plt.savefig('fft_freq.png')
-    plt.close()
+def fft_ke(L, N):
+    dx = L / N
+    n = np.arange(0, N + 1)
+    dk = 2 * np.pi / L
+    kmax = 2 * np.pi / dx
+
+
+    x = np.linspace(0, L, N, endpoint=False)
+    k = np.linspace(0, kmax, N, endpoint=False)
+
+    print("x = ", x)
+    print("k = ", k)
+
+    f = np.sin(x)
+    F = fft.fft(f)
+    #plt.plot(x, f)  
+    plt.plot(k, np.real(F))
+    #plt.plot(k, np.imag(F))
+
+    plt.grid()
+    plt.show()
